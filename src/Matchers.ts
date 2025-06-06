@@ -1,4 +1,3 @@
-
 export type MatcherFn<T> = (actualValue: T) => boolean;
 
 export interface MatcherLike<T> {
@@ -13,7 +12,7 @@ export class Matcher<T> implements MatcherLike<T> {
     $$typeof: symbol;
     inverse?: boolean;
 
-    constructor(readonly asymmetricMatch: MatcherFn<T>, private readonly description: string) {
+    constructor(readonly asymmetricMatch: MatcherFn<T>, private readonly description = '') {
         this.$$typeof = Symbol.for('jest.asymmetricMatcher');
     }
 
@@ -63,7 +62,7 @@ export interface MatcherCreator<T, E = T> {
     (expectedValue?: E): Matcher<T>;
 }
 
-export type MatchersOrLiterals<Y extends any[]> = { [K in keyof Y]: MatcherLike<Y[K]> | Y[K]  };
+export type MatchersOrLiterals<Y extends any[]> = { [K in keyof Y]: MatcherLike<Y[K]> | Y[K] };
 
 export const any: MatcherCreator<any> = () => new Matcher(() => true, 'any()');
 export const anyBoolean: MatcherCreator<boolean> = () =>
