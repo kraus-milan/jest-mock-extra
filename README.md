@@ -1,4 +1,4 @@
-# jest-mock-extended
+# jest-mock-extra
 
 > Type safe mocking extensions for Jest 🃏
 
@@ -20,19 +20,19 @@
 ## Installation
 
 ```bash
-npm install jest-mock-extended --save-dev
+npm install jest-mock-extra --save-dev
 ```
 
 or
 
 ```bash
-yarn add jest-mock-extended --dev
+yarn add jest-mock-extra --dev
 ```
 
 ## Example
 
 ```ts
-import { mock } from 'jest-mock-extended';
+import { mock } from 'jest-mock-extra';
 
 interface PartyProvider {
     getPartyType: () => string;
@@ -75,7 +75,7 @@ If you wish to assign a mock to a variable that requires a type in your test, th
 given that this will provide the apis for calledWith() and other built-in jest types for providing test functionality.
 
 ```ts
-import { MockProxy, mock } from 'jest-mock-extended';
+import { MockProxy, mock } from 'jest-mock-extra';
 
 describe('test', () => {
     let myMock: MockProxy<MyInterface>;
@@ -94,7 +94,7 @@ describe('test', () => {
 
 ## calledWith() Extension
 
-`jest-mock-extended` allows for invocation matching expectations. Types of arguments, even when using matchers are type checked.
+`jest-mock-extra` allows for invocation matching expectations. Types of arguments, even when using matchers are type checked.
 
 ```ts
 const provider = mock<PartyProvider>();
@@ -116,11 +116,11 @@ fn.calledWith(1, 2).mockReturnValue('str');
 
 ## Clearing / Resetting Mocks
 
-`jest-mock-extended` exposes a mockClear and mockReset for resetting or clearing mocks with the same
+`jest-mock-extra` exposes a mockClear and mockReset for resetting or clearing mocks with the same
 functionality as `jest.fn()`.
 
 ```ts
-import { mock, mockClear, mockReset } from 'jest-mock-extended';
+import { mock, mockClear, mockReset } from 'jest-mock-extra';
 
 describe('test', () => {
    const mock: UserService = mock<UserService>();
@@ -138,7 +138,7 @@ If your class has objects returns from methods that you would also like to mock,
 replacement for mock.
 
 ```ts
-import { mockDeep } from 'jest-mock-extended';
+import { mockDeep } from 'jest-mock-extra';
 
 const mockObj: DeepMockProxy<Test1> = mockDeep<Test1>();
 mockObj.deepProp.getNumber.calledWith(1).mockReturnValue(4);
@@ -148,7 +148,7 @@ expect(mockObj.deepProp.getNumber(1)).toBe(4);
 if you also need support for properties on functions, you can pass in an option to enable this
 
 ```ts
-import { mockDeep } from 'jest-mock-extended';
+import { mockDeep } from 'jest-mock-extra';
 
 const mockObj: DeepMockProxy<Test1> = mockDeep<Test1>({ funcPropSupport: true });
 mockObj.deepProp.calledWith(1).mockReturnValue(3);
@@ -161,7 +161,7 @@ expect(mockObj.deepProp.getNumber(1)).toBe(4);
 Can can provide a fallback mock implementation used if you do not define a return value using `calledWith`.
 
 ```ts
-import { mockDeep } from 'jest-mock-extended';
+import { mockDeep } from 'jest-mock-extra';
 const mockObj = mockDeep<Test1>({
     fallbackMockImplementation: () => {
         throw new Error('please add expected return value using calledWith');
@@ -198,7 +198,7 @@ expect(() => mockObj.getNumber()).toThrowError('not mocked');
 Custom matchers can be written using a `MatcherCreator`
 
 ```ts
-import { MatcherCreator, Matcher } from 'jest-mock-extended';
+import { MatcherCreator, Matcher } from 'jest-mock-extra';
 
 // expectedValue is optional
 export const myMatcher: MatcherCreator<MyType> = (expectedValue) =>
@@ -211,7 +211,7 @@ By default, the expected value and actual value are the same type. In the case w
 differently than the actual value, you can use the optional 2 generic parameter:
 
 ```ts
-import { MatcherCreator, Matcher } from 'jest-mock-extended';
+import { MatcherCreator, Matcher } from 'jest-mock-extra';
 
 // expectedValue is optional
 export const myMatcher: MatcherCreator<string[], string> = (expectedValue) =>
