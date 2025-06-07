@@ -33,18 +33,14 @@ export interface CalledWithMock<T extends FunctionLike> extends jest.Mock<T> {
 }
 
 export type _MockProxy<T> = {
-    [K in keyof T]: T[K] extends FunctionLike
-        ? T[K] & CalledWithMock<T[K]>
-        : T[K];
+    [K in keyof T]: T[K] extends FunctionLike ? T[K] & CalledWithMock<T[K]> : T[K];
 };
 
 export type MockProxy<T> = _MockProxy<T> & T;
 
 export type _DeepMockProxy<T> = {
     // This supports deep mocks in the else branch
-    [K in keyof T]: T[K] extends FunctionLike
-    ? T[K] & CalledWithMock<T[K]>
-    : T[K] & _DeepMockProxy<T[K]>;
+    [K in keyof T]: T[K] extends FunctionLike ? T[K] & CalledWithMock<T[K]> : T[K] & _DeepMockProxy<T[K]>;
 };
 
 // we intersect with T here instead of on the mapped type above to
@@ -55,9 +51,7 @@ export type DeepMockProxy<T> = _DeepMockProxy<T> & T;
 
 export type _DeepMockProxyWithFuncPropSupport<T> = {
     // This supports deep mocks in the else branch
-    [K in keyof T]: T[K] extends FunctionLike
-    ? CalledWithMock<T[K]> & DeepMockProxy<T[K]>
-    : DeepMockProxy<T[K]>;
+    [K in keyof T]: T[K] extends FunctionLike ? CalledWithMock<T[K]> & DeepMockProxy<T[K]> : DeepMockProxy<T[K]>;
 };
 
 export type DeepMockProxyWithFuncPropSupport<T> = _DeepMockProxyWithFuncPropSupport<T> & T;
@@ -147,8 +141,6 @@ const handler = (opts?: MockOpts) => ({
     },
 
     get: (obj: MockProxy<any>, property: ProxiedProperty) => {
-        let fn = calledWithFn({ fallbackMockImplementation: opts?.fallbackMockImplementation });
-
         if (!(property in obj)) {
             if (GLOBAL_CONFIG.ignoreProps?.includes(property)) {
                 return undefined;
@@ -157,16 +149,18 @@ const handler = (opts?: MockOpts) => ({
             if (property === Symbol.iterator) {
                 return obj[property];
             }
+
+            const fn = calledWithFn({ fallbackMockImplementation: opts?.fallbackMockImplementation });
+
             // So this calls check here is totally not ideal - jest internally does a
             // check to see if this is a spy - which we want to say no to, but blindly returning
             // an proxy for calls results in the spy check returning true. This is another reason
             // why deep is opt in.
             if (opts?.deep && property !== 'calls') {
-
                 obj[property] = new Proxy<MockProxy<any>>(fn, handler(opts));
                 obj[property]._isMockObject = true;
             } else {
-                obj[property] = calledWithFn({ fallbackMockImplementation: opts?.fallbackMockImplementation });
+                obj[property] = fn;
             }
         }
 
