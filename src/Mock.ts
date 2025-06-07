@@ -1,8 +1,7 @@
 import calledWithFn from './CalledWithFn';
 import { MatchersOrLiterals } from './Matchers';
 import { DeepPartial } from 'ts-essentials';
-import { jest } from '@jest/globals';
-import { FunctionLike } from 'jest-mock';
+import { fn as jestFn, FunctionLike, Mock } from 'jest-mock';
 
 type ProxiedProperty = string | number | symbol;
 
@@ -28,8 +27,8 @@ export const JestMockExtended = {
     },
 };
 
-export interface CalledWithMock<T extends FunctionLike> extends jest.Mock<T> {
-    calledWith: (...args: [...MatchersOrLiterals<Parameters<T>>]) => jest.Mock<T>;
+export interface CalledWithMock<T extends FunctionLike> extends Mock<T> {
+    calledWith: (...args: [...MatchersOrLiterals<Parameters<T>>]) => Mock<T>;
 }
 
 export type _MockProxy<T> = {
@@ -195,7 +194,7 @@ export const stub = <T extends object>(): T => {
                 // @ts-expect-error
                 return obj[property];
             }
-            return jest.fn();
+            return jestFn();
         },
     });
 };

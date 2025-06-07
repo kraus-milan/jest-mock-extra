@@ -1,11 +1,10 @@
 import { CalledWithMock } from './Mock';
 import { Matcher, MatchersOrLiterals } from './Matchers';
-import { jest } from '@jest/globals';
-import type { FunctionLike, Mock } from 'jest-mock';
+import { fn as jestFn, FunctionLike, Mock } from 'jest-mock';
 
 interface CalledWithStackItem<T extends FunctionLike> {
     args: MatchersOrLiterals<[...Parameters<T>]>;
-    calledWithFn: jest.Mock<T>;
+    calledWithFn: Mock<T>;
 }
 
 interface JestAsymmetricMatcher {
@@ -46,7 +45,7 @@ const checkCalledWith = <T extends FunctionLike>(
 export const calledWithFn = <T extends FunctionLike>({
     fallbackMockImplementation,
 }: { fallbackMockImplementation?: T } = {}): CalledWithMock<T> => {
-    const fn = jest.fn(fallbackMockImplementation);
+    const fn = jestFn(fallbackMockImplementation);
 
     let calledWithStack: CalledWithStackItem<T>[] = [];
 
@@ -55,7 +54,7 @@ export const calledWithFn = <T extends FunctionLike>({
     (fn as CalledWithMock<T>).calledWith = (...args) => {
         // We create new function to delegate any interactions (mockReturnValue etc.) to for this set of args.
         // If that set of args is matched, we just call that jest.fn() for the result.
-        const calledWithFn = jest.fn(((...args) => implementationRegistry.get(fn)?.(...args)) as T);
+        const calledWithFn = jestFn(((...args) => implementationRegistry.get(fn)?.(...args)) as T);
 
         const mockImplementation = fn.getMockImplementation();
 
