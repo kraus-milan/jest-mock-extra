@@ -1,7 +1,7 @@
 import { CalledWithMock } from './Mock';
 import { Matcher, MatchersOrLiterals } from './Matchers';
 import { jest } from '@jest/globals';
-import type { FunctionLike } from 'jest-mock';
+import type { FunctionLike, Mock } from 'jest-mock';
 
 interface CalledWithStackItem<T extends FunctionLike> {
     args: MatchersOrLiterals<[...Parameters<T>]>;
@@ -15,10 +15,12 @@ function isJestAsymmetricMatcher(obj: any): obj is JestAsymmetricMatcher {
     return !!obj && typeof obj === 'object' && 'asymmetricMatch' in obj && typeof obj.asymmetricMatch === 'function';
 }
 
+const implementationRegistry = new WeakMap<Mock, FunctionLike>();
+
 const checkCalledWith = <T extends FunctionLike>(
+    fn: Mock,
     calledWithStack: CalledWithStackItem<T>[],
-    actualArgs: [...Parameters<T>],
-    fallbackMockImplementation?: T
+    actualArgs: [...Parameters<T>]
 ): ReturnType<T> => {
     const calledWithInstance = calledWithStack.find((instance) =>
         instance.args.every((matcher, i) => {
@@ -34,28 +36,40 @@ const checkCalledWith = <T extends FunctionLike>(
         })
     );
 
-    return calledWithInstance
-        ? calledWithInstance.calledWithFn(...actualArgs)
-        : fallbackMockImplementation && fallbackMockImplementation(...actualArgs);
+    if (calledWithInstance) {
+        return calledWithInstance.calledWithFn(...actualArgs);
+    }
+
+    return implementationRegistry.get(fn)?.(...actualArgs);
 };
 
 export const calledWithFn = <T extends FunctionLike>({
     fallbackMockImplementation,
 }: { fallbackMockImplementation?: T } = {}): CalledWithMock<T> => {
     const fn = jest.fn(fallbackMockImplementation);
+
     let calledWithStack: CalledWithStackItem<T>[] = [];
+
+    const calledWithImplementation = ((...args: Parameters<T>) => checkCalledWith(fn, calledWithStack, args)) as T;
 
     (fn as CalledWithMock<T>).calledWith = (...args) => {
         // We create new function to delegate any interactions (mockReturnValue etc.) to for this set of args.
         // If that set of args is matched, we just call that jest.fn() for the result.
-        const calledWithFn = jest.fn(fallbackMockImplementation);
+        const calledWithFn = jest.fn(((...args) => implementationRegistry.get(fn)?.(...args)) as T);
+
         const mockImplementation = fn.getMockImplementation();
-        if (!mockImplementation || mockImplementation === fallbackMockImplementation) {
+
+        if (mockImplementation && mockImplementation !== calledWithImplementation) {
+            implementationRegistry.set(fn, mockImplementation);
+        }
+
+        if (!mockImplementation || mockImplementation !== calledWithImplementation) {
             // Our original function gets a mock implementation which handles the matching
-            // @ts-expect-error '(...args: any) => ReturnType<T>' is assignable to the constraint of type 'T', but 'T' could be instantiated with a different subtype of constraint 'FunctionLike'.
-            fn.mockImplementation((...args) => checkCalledWith(calledWithStack, args, fallbackMockImplementation));
+            fn.mockImplementation(calledWithImplementation);
+
             calledWithStack = [];
         }
+
         calledWithStack.unshift({ args, calledWithFn });
 
         return calledWithFn;
