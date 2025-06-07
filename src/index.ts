@@ -10,8 +10,11 @@ export {
     mockFn,
     stub,
 } from './Mock';
-import { default as mockDefault } from './Mock'
-export const mock = mockDefault
+
+import { default as mockDefault } from './Mock';
+export const mock = mockDefault;
+
 import { default as calledWithFnDefault } from './CalledWithFn';
-export const calledWithFn = calledWithFnDefault
+export const calledWithFn = calledWithFnDefault;
+
 export * from './Matchers';

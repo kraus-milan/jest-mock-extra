@@ -12,7 +12,10 @@ export class Matcher<T> implements MatcherLike<T> {
     $$typeof: symbol;
     inverse?: boolean;
 
-    constructor(readonly asymmetricMatch: MatcherFn<T>, private readonly description = '') {
+    constructor(
+        readonly asymmetricMatch: MatcherFn<T>,
+        private readonly description = '',
+    ) {
         this.$$typeof = Symbol.for('jest.asymmetricMatcher');
     }
 
@@ -92,7 +95,7 @@ export const objectContainsKey: MatcherCreator<any, string> = (key) =>
 export const objectContainsValue: MatcherCreator<any> = (value) =>
     new Matcher(
         (actualValue) => anyObject().asymmetricMatch(actualValue) && Object.values(actualValue).includes(value),
-        'objectContainsValue()'
+        'objectContainsValue()',
     );
 
 export const notNull: MatcherCreator<any> = () => new Matcher((actualValue) => actualValue !== null, 'notNull()');

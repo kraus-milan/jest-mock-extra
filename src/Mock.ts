@@ -105,7 +105,7 @@ export const mockReset = (mock: MockProxy<any>) => {
 
 export function mockDeep<T>(
     opts: { funcPropSupport?: true; fallbackMockImplementation?: MockOpts['fallbackMockImplementation'] },
-    mockImplementation?: DeepPartial<T>
+    mockImplementation?: DeepPartial<T>,
 ): DeepMockProxyWithFuncPropSupport<T>;
 export function mockDeep<T>(mockImplementation?: DeepPartial<T>): DeepMockProxy<T>;
 export function mockDeep(arg1: any, arg2?: any) {
@@ -175,7 +175,7 @@ const handler = (opts?: MockOpts) => ({
 
 const mock = <T, MockedReturn extends MockProxy<T> & T = MockProxy<T> & T>(
     mockImplementation: DeepPartial<T> = {} as DeepPartial<T>,
-    opts?: MockOpts
+    opts?: MockOpts,
 ): MockedReturn => {
     // @ts-expect-error private
     mockImplementation!._isMockObject = true;

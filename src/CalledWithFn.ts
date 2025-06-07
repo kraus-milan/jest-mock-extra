@@ -19,7 +19,7 @@ const implementationRegistry = new WeakMap<Mock, FunctionLike>();
 const checkCalledWith = <T extends FunctionLike>(
     fn: Mock,
     calledWithStack: CalledWithStackItem<T>[],
-    actualArgs: [...Parameters<T>]
+    actualArgs: [...Parameters<T>],
 ): ReturnType<T> => {
     const calledWithInstance = calledWithStack.find((instance) =>
         instance.args.every((matcher, i) => {
@@ -32,7 +32,7 @@ const checkCalledWith = <T extends FunctionLike>(
             }
 
             return actualArgs[i] === matcher;
-        })
+        }),
     );
 
     if (calledWithInstance) {
