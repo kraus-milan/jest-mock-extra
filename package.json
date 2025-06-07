@@ -1,14 +1,14 @@
 {
-    "name": "jest-mock-extended",
-    "version": "3.0.7",
-    "homepage": "https://github.com/marchaos/jest-mock-extended",
+    "name": "jest-mock-extra",
+    "version": "1.0.0-beta.1",
+    "homepage": "https://github.com/kraus-milan/jest-mock-extra",
     "description": "Type safe mocking extensions for jest",
     "files": [
         "lib/**/*"
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/marchaos/jest-mock-extended.git"
+        "url": "https://github.com/kraus-milan/jest-mock-extra.git"
     },
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -35,6 +35,6 @@
         "jest-mock": "^29.0.0",
         "typescript": "^5.0.0"
     },
-    "author": "Marc McIntyre <marchaos@gmail.com>",
+    "author": "Milan Kraus <fajzenko@gmail.com>",
     "license": "MIT"
 }
