@@ -3,7 +3,7 @@
 > Type safe mocking extensions for Jest 🃏
 
 [![Build Status](https://travis-ci.com/marchaos/jest-mock-extended.svg?branch=master)](https://travis-ci.com/marchaos/jest-mock-extended)
-[![Coverage Status](https://coveralls.io/repos/github/marchaos/jest-mock-extended/badge.svg?branch=master)](https://coveralls.io/github/marchaos/jest-mock-extended?branch=master)
+[![cov](https://kraus-milan.github.io/jest-mock-extra/badges/coverage.svg)](https://github.com/kraus-milan/jest-mock-extra/actions)
 [![npm version](https://badge.fury.io/js/jest-mock-extended.svg)](https://badge.fury.io/js/jest-mock-extended)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm downloads](https://badgen.net/npm/dw/jest-mock-extended)](https://badge.fury.io/js/jest-mock-extended)
