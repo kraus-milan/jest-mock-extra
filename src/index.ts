@@ -1,14 +1,14 @@
 export {
-    CalledWithMock,
-    DeepMockProxy,
-    GlobalConfig,
-    JestMockExtended,
-    mockClear,
-    mockDeep,
-    mockFn,
-    MockProxy,
-    mockReset,
-    stub,
+  CalledWithMock,
+  DeepMockProxy,
+  GlobalConfig,
+  JestMockExtended,
+  mockClear,
+  mockDeep,
+  mockFn,
+  MockProxy,
+  mockReset,
+  stub,
 } from './Mock';
 
 import { default as mockDefault } from './Mock';

@@ -37,37 +37,37 @@ yarn add jest-mock-extra --dev
 import { mock } from 'jest-mock-extra';
 
 interface PartyProvider {
-    getPartyType: () => string;
-    getSongs: (type: string) => string[];
-    start: (type: string) => void;
+  getPartyType: () => string;
+  getSongs: (type: string) => string[];
+  start: (type: string) => void;
 }
 
 describe('Party Tests', () => {
-    test('Mock out an interface', () => {
-        const mock = mock<PartyProvider>();
-        mock.start('disco party');
+  test('Mock out an interface', () => {
+    const mock = mock<PartyProvider>();
+    mock.start('disco party');
 
-        expect(mock.start).toHaveBeenCalledWith('disco party');
-    });
+    expect(mock.start).toHaveBeenCalledWith('disco party');
+  });
 
-    test('mock out a return type', () => {
-        const mock = mock<PartyProvider>();
-        mock.getPartyType.mockReturnValue('west coast party');
+  test('mock out a return type', () => {
+    const mock = mock<PartyProvider>();
+    mock.getPartyType.mockReturnValue('west coast party');
 
-        expect(mock.getPartyType()).toBe('west coast party');
-    });
+    expect(mock.getPartyType()).toBe('west coast party');
+  });
 
-    test('throwing an error if we forget to specify the return value');
-    const mock = mock<PartyProvider>(
-        {},
-        {
-            fallbackMockImplementation: () => {
-                throw new Error('not mocked');
-            },
-        },
-    );
+  test('throwing an error if we forget to specify the return value');
+  const mock = mock<PartyProvider>(
+    {},
+    {
+      fallbackMockImplementation: () => {
+        throw new Error('not mocked');
+      },
+    },
+  );
 
-    expect(() => mock.getPartyType()).toThrowError('not mocked');
+  expect(() => mock.getPartyType()).toThrowError('not mocked');
 });
 ```
 
@@ -165,9 +165,9 @@ Can can provide a fallback mock implementation used if you do not define a retur
 ```ts
 import { mockDeep } from 'jest-mock-extra';
 const mockObj = mockDeep<Test1>({
-    fallbackMockImplementation: () => {
-        throw new Error('please add expected return value using calledWith');
-    },
+  fallbackMockImplementation: () => {
+    throw new Error('please add expected return value using calledWith');
+  },
 });
 expect(() => mockObj.getNumber()).toThrowError('not mocked');
 ```
@@ -204,9 +204,9 @@ import { MatcherCreator, Matcher } from 'jest-mock-extra';
 
 // expectedValue is optional
 export const myMatcher: MatcherCreator<MyType> = (expectedValue) =>
-    new Matcher((actualValue) => {
-        return expectedValue === actualValue && actualValue.isSpecial;
-    });
+  new Matcher((actualValue) => {
+    return expectedValue === actualValue && actualValue.isSpecial;
+  });
 ```
 
 By default, the expected value and actual value are the same type. In the case where you need to type the expected value
@@ -217,7 +217,7 @@ import { MatcherCreator, Matcher } from 'jest-mock-extra';
 
 // expectedValue is optional
 export const myMatcher: MatcherCreator<string[], string> = (expectedValue) =>
-    new Matcher((actualValue) => {
-        return actualValue.includes(expectedValue);
-    });
+  new Matcher((actualValue) => {
+    return actualValue.includes(expectedValue);
+  });
 ```
