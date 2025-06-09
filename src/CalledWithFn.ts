@@ -15,12 +15,10 @@ function isJestAsymmetricMatcher(obj: any): obj is JestAsymmetricMatcher {
   return !!obj && typeof obj === 'object' && 'asymmetricMatch' in obj && typeof obj.asymmetricMatch === 'function';
 }
 
-const implementationRegistry = new WeakMap<Mock, FunctionLike>();
-
 const checkCalledWith = <T extends FunctionLike>(
-  fn: Mock,
-  calledWithStack: CalledWithStackItem<T>[],
+  calledWithStack: Array<CalledWithStackItem<T>>,
   actualArgs: [...Parameters<T>],
+  defaultFn?: T,
 ): ReturnType<T> => {
   const calledWithInstance = calledWithStack.find((instance) =>
     instance.args.every((matcher, i) => {
@@ -36,11 +34,9 @@ const checkCalledWith = <T extends FunctionLike>(
     }),
   );
 
-  if (calledWithInstance) {
-    return calledWithInstance.calledWithFn(...actualArgs);
-  }
+  const fn = calledWithInstance?.calledWithFn ?? defaultFn;
 
-  return implementationRegistry.get(fn)?.(...actualArgs);
+  return fn?.(...actualArgs);
 };
 
 export const calledWithFn = <T extends FunctionLike>({
@@ -49,19 +45,20 @@ export const calledWithFn = <T extends FunctionLike>({
   const fn = jestFn(fallbackMockImplementation);
 
   let calledWithStack: CalledWithStackItem<T>[] = [];
+  let defaultFn = fallbackMockImplementation;
 
-  const calledWithImplementation = ((...args: Parameters<T>) => checkCalledWith(fn, calledWithStack, args)) as T;
+  const calledWithImplementation = ((...args: Parameters<T>) => checkCalledWith(calledWithStack, args, defaultFn)) as T;
 
   (fn as CalledWithMock<T>).calledWith = (...args) => {
-    // We create new function to delegate any interactions (mockReturnValue etc.) to for this set of args.
-    // If that set of args is matched, we just call that jest.fn() for the result.
-    const calledWithFn = jestFn(((...args) => implementationRegistry.get(fn)?.(...args)) as T);
-
     const mockImplementation = fn.getMockImplementation();
 
-    if (mockImplementation && mockImplementation !== calledWithImplementation) {
-      implementationRegistry.set(fn, mockImplementation);
+    if (mockImplementation !== calledWithImplementation) {
+      defaultFn = mockImplementation;
     }
+
+    // We create new function to delegate any interactions (mockReturnValue etc.) to for this set of args.
+    // If that set of args is matched, we just call that jest.fn() for the result.
+    const calledWithFn = jestFn(defaultFn);
 
     if (!mockImplementation || mockImplementation !== calledWithImplementation) {
       // Our original function gets a mock implementation which handles the matching

@@ -19,6 +19,11 @@ This library is based on [jest-mock-extended](https://github.com/marchaos/jest-m
 - Supports mocking deep objects / class instances.
 - Familiar Jest like API
 
+### New features not present in the original library
+
+- `calledWith()` takes into account previous implementation set by `.mock*Value()` and uses it as default value
+- Jest v30 support
+
 ## Installation
 
 ```bash
@@ -67,7 +72,7 @@ describe('Party Tests', () => {
     },
   );
 
-  expect(() => mock.getPartyType()).toThrowError('not mocked');
+  expect(() => mock.getPartyType()).toThrow('not mocked');
 });
 ```
 
@@ -114,6 +119,64 @@ You can also use `mockFn()` to create a `jest.fn()` with the calledWith extensio
 type MyFn = (x: number, y: number) => Promise<string>;
 const fn = mockFn<MyFn>();
 fn.calledWith(1, 2).mockReturnValue('str');
+```
+
+### Order of expectations
+
+The latest defined expectaions using `.calledWith()` have higher prio than the previous expections. If you are using matchers that could match multiple invocations, define more specific matchers later:
+
+```ts
+type MyFn = (x: number, y: number) => Promise<string>;
+const fn = mockFn<MyFn>();
+fn.calledWith(any(), any()).mockReturnValue('one');
+fn.calledWith(1, 2).mockReturnValue('two');
+
+expect(fn(1, 2)).toBe('two');
+
+const fn2 = mockFn<MyFn>();
+fn.calledWith(1, 2).mockReturnValue('two');
+fn.calledWith(any(), any()).mockReturnValue('one');
+
+expect(fn(1, 2)).toBe('one');
+```
+
+### Default implementation
+
+Mock implementation set before `.calledWith()` is called is used as default value and it is executed if no set matchers match the actual parameters of the function/method call.
+
+```ts
+type MyFn = (x: number, y: number) => Promise<string>;
+const fn = mockFn<MyFn>();
+fn.mockReturnValue('foo');
+fn.calledWith(1, 2).mockReturnValue('bar');
+
+expect(fn(3, 4)).toBe('foo');
+```
+
+Setting default implementation after the `.calledWith()` clears all the parameters expectations.
+
+```ts
+type MyFn = (x: number, y: number) => Promise<string>;
+const fn = mockFn<MyFn>();
+fn.calledWith(1, 2).mockReturnValue('bar');
+fn.mockReturnValue('foo');
+
+expect(fn(1, 2)).toBe('foo');
+```
+
+### Expectations for multiple calls with the same parameters
+
+If you want to set expectations for different calls with the same parameters using `.mock*Once()`, you need to store the instance of the mock created using `.calledWith()` and add the expectations to it:
+
+```ts
+type MyFn = (x: number, y: number) => Promise<string>;
+const fn = mockFn<MyFn>();
+const oneTwo = fn.calledWith(1, 2);
+oneTwo.mockReturnValueOnce('foo');
+oneTwo.mockReturnValueOnce('bar');
+
+expect(fn(1, 2)).toBe('foo');
+expect(fn(1, 2)).toBe('bar');
 ```
 
 ## Clearing / Resetting Mocks

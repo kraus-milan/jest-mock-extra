@@ -148,6 +148,24 @@ describe('jest-mock-extended', () => {
     expect(() => mockObj.getSomethingWithArgs(1, 2)).toThrow('not mocked');
   });
 
+  test('Can use default implementation with calledWith', () => {
+    const mockObj = mock<MockInt>();
+    mockObj.getSomethingWithArgs.mockReturnValue(3);
+    mockObj.getSomethingWithArgs.calledWith(1, 2).mockReturnValue(12);
+
+    expect(mockObj.getSomethingWithArgs(1, 2)).toBe(12);
+    expect(mockObj.getSomethingWithArgs(6, 7)).toBe(3);
+  });
+
+  test('Setting default implementation clears all calledWith expectations', () => {
+    const mockObj = mock<MockInt>();
+    mockObj.getSomethingWithArgs.calledWith(1, 2).mockReturnValue(12);
+    mockObj.getSomethingWithArgs.mockReturnValue(3);
+
+    expect(mockObj.getSomethingWithArgs(1, 2)).toBe(3);
+    expect(mockObj.getSomethingWithArgs(6, 7)).toBe(3);
+  });
+
   test('Can specify multiple calledWith', () => {
     const mockObj = mock<MockInt>();
     mockObj.getSomethingWithArgs.calledWith(1, 2).mockReturnValue(3);
@@ -155,6 +173,18 @@ describe('jest-mock-extended', () => {
 
     expect(mockObj.getSomethingWithArgs(1, 2)).toBe(3);
     expect(mockObj.getSomethingWithArgs(6, 7)).toBe(13);
+  });
+
+  test('Can specify multiple expectaions for the same calledWith parameters', () => {
+    const mockObj = mock<MockInt>();
+    const oneTwo = mockObj.getSomethingWithArgs.calledWith(1, 2);
+    oneTwo.mockReturnValueOnce(1);
+    oneTwo.mockReturnValueOnce(2);
+    oneTwo.mockReturnValue(3);
+
+    expect(mockObj.getSomethingWithArgs(1, 2)).toBe(1);
+    expect(mockObj.getSomethingWithArgs(1, 2)).toBe(2);
+    expect(mockObj.getSomethingWithArgs(1, 2)).toBe(3);
   });
 
   test('Can set props', () => {
