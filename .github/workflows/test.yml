@@ -1,24 +1,18 @@
 name: Test
 on: [push, pull_request, workflow_dispatch]
-permissions:
-    packages: read
-env:
-    NODE_AUTH_TOKEN: ${{ github.token }}
 jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-            # Your original steps
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
-                  registry-url: https://npm.pkg.github.com/
+                  registry-url: https://registry.npmjs.org/
             - name: Install
               run: npm install
             - name: Test and Coverage
               run: npm run coverage
 
-            # Add this
             - name: Update Coverage Badge
               # GitHub actions: default branch variable
               # https://stackoverflow.com/questions/64781462/github-actions-default-branch-variable
