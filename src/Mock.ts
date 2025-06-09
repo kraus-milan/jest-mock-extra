@@ -1,7 +1,8 @@
+import { fn as jestFn, FunctionLike, Mock } from 'jest-mock';
+import { DeepPartial } from 'ts-essentials';
+
 import calledWithFn from './CalledWithFn';
 import { MatchersOrLiterals } from './Matchers';
-import { DeepPartial } from 'ts-essentials';
-import { fn as jestFn, FunctionLike, Mock } from 'jest-mock';
 
 type ProxiedProperty = string | number | symbol;
 
@@ -61,7 +62,7 @@ export interface MockOpts {
 }
 
 export const mockClear = (mock: MockProxy<any>) => {
-    for (let key of Object.keys(mock)) {
+    for (const key of Object.keys(mock)) {
         if (mock[key] === null || mock[key] === undefined) {
             continue;
         }
@@ -82,7 +83,7 @@ export const mockClear = (mock: MockProxy<any>) => {
 };
 
 export const mockReset = (mock: MockProxy<any>) => {
-    for (let key of Object.keys(mock)) {
+    for (const key of Object.keys(mock)) {
         if (mock[key] === null || mock[key] === undefined) {
             continue;
         }
@@ -118,7 +119,7 @@ export function mockDeep(arg1: any, arg2?: any) {
 
 const overrideMockImp = (obj: DeepPartial<any>, opts?: MockOpts) => {
     const proxy = new Proxy<MockProxy<any>>(obj, handler(opts));
-    for (let name of Object.keys(obj)) {
+    for (const name of Object.keys(obj)) {
         if (typeof obj[name] === 'object' && obj[name] !== null) {
             proxy[name] = overrideMockImp(obj[name], opts);
         } else {

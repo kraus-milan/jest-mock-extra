@@ -1,26 +1,27 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
+
 import {
     any,
     anyArray,
     anyBoolean,
+    anyFunction,
+    anyMap,
     anyNumber,
     anyObject,
-    anyString,
-    anyMap,
     anySet,
-    isA,
-    arrayIncludes,
-    anyFunction,
+    anyString,
     anySymbol,
-    setHas,
+    arrayIncludes,
+    captor,
+    isA,
     mapHas,
-    objectContainsKey,
-    objectContainsValue,
+    matches,
+    notEmpty,
     notNull,
     notUndefined,
-    notEmpty,
-    captor,
-    matches,
+    objectContainsKey,
+    objectContainsValue,
+    setHas,
 } from './Matchers';
 
 class Cls {}

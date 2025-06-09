@@ -1,6 +1,6 @@
 export type MatcherFn<T> = (actualValue: T) => boolean;
 
-export interface MatcherLike<T> {
+export interface MatcherLike {
     asymmetricMatch(other: unknown): boolean;
     toString(): string;
     getExpectedType?(): string;
@@ -8,7 +8,7 @@ export interface MatcherLike<T> {
 }
 
 // needs to be a class so we can instanceof
-export class Matcher<T> implements MatcherLike<T> {
+export class Matcher<T> implements MatcherLike {
     $$typeof: symbol;
     inverse?: boolean;
 
@@ -65,7 +65,7 @@ export interface MatcherCreator<T, E = T> {
     (expectedValue?: E): Matcher<T>;
 }
 
-export type MatchersOrLiterals<Y extends any[]> = { [K in keyof Y]: MatcherLike<Y[K]> | Y[K] };
+export type MatchersOrLiterals<Y extends any[]> = { [K in keyof Y]: MatcherLike | Y[K] };
 
 export const any: MatcherCreator<any> = () => new Matcher(() => true, 'any()');
 export const anyBoolean: MatcherCreator<boolean> = () =>
@@ -73,9 +73,11 @@ export const anyBoolean: MatcherCreator<boolean> = () =>
 export const anyNumber: MatcherCreator<number> = () =>
     new Matcher((actualValue) => typeof actualValue === 'number' && !isNaN(actualValue), 'anyNumber()');
 export const anyString: MatcherCreator<string> = () => new Matcher((actualValue: string) => typeof actualValue === 'string', 'anyString()');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const anyFunction: MatcherCreator<Function> = () =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     new Matcher((actualValue: Function) => typeof actualValue === 'function', 'anyFunction()');
-export const anySymbol: MatcherCreator<Symbol> = () => new Matcher((actualValue) => typeof actualValue === 'symbol', 'anySymbol()');
+export const anySymbol: MatcherCreator<symbol> = () => new Matcher((actualValue) => typeof actualValue === 'symbol', 'anySymbol()');
 export const anyObject: MatcherCreator<any> = () =>
     new Matcher((actualValue) => typeof actualValue === 'object' && actualValue !== null, 'anyObject()');
 
@@ -103,5 +105,5 @@ export const notUndefined: MatcherCreator<any> = () => new Matcher((actualValue)
 export const notEmpty: MatcherCreator<any> = () =>
     new Matcher((actualValue) => actualValue !== null && actualValue !== undefined && actualValue !== '', 'notEmpty()');
 
-export const captor = <T extends any = any>() => new CaptorMatcher<T>();
-export const matches = <T extends any = any>(matcher: MatcherFn<T>) => new Matcher(matcher, 'matches()');
+export const captor = <T>() => new CaptorMatcher<T>();
+export const matches = <T>(matcher: MatcherFn<T>) => new Matcher(matcher, 'matches()');

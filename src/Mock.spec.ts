@@ -1,9 +1,10 @@
-import mock, { mockClear, mockDeep, mockReset, mockFn, JestMockExtended } from './Mock';
-import { anyNumber } from './Matchers';
-import calledWithFn from './CalledWithFn';
-import { MockProxy } from './Mock';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, expect, jest, test } from '@jest/globals';
 import { fail } from 'assert';
+
+import calledWithFn from './CalledWithFn';
+import { anyNumber } from './Matchers';
+import mock, { JestMockExtended, mockClear, mockDeep, mockFn, MockProxy, mockReset } from './Mock';
 
 interface MockInt {
     id: number;
@@ -268,7 +269,7 @@ describe('jest-mock-extended', () => {
             mockObj.getSomethingWithMoreArgs.calledWith(anyNumber(), expect.anything(), 3).mockReturnValue(4);
 
             expect(mockObj.getSomethingWithMoreArgs(1, 2, 3)).toBe(4);
-            expect(mockObj.getSomethingWithMoreArgs(1, 2, 4)).toBeUndefined;
+            expect(mockObj.getSomethingWithMoreArgs(1, 2, 4)).toBeUndefined();
         });
 
         test('Can use calledWith with an other mock', () => {
