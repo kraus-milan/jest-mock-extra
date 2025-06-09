@@ -9,7 +9,7 @@ jobs:
               with:
                   node-version: 20
             - name: Install
-              run: npm install
+              run: npm ci
             - name: Test and Coverage
               run: npm run coverage
 
