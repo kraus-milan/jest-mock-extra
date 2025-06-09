@@ -22,7 +22,7 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "ts-essentials": "^10.0.4"
+        "ts-essentials": "^10.1.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.28.0",
