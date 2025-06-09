@@ -18,8 +18,10 @@
     "test": "jest",
     "build": "tsc",
     "coverage": "jest --coverage",
-    "prettier": "prettier -w .",
-    "lint": "eslint ."
+    "prettier:check": "prettier -c .",
+    "prettier:fix": "prettier -w .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "ts-essentials": ">=9.3.2"

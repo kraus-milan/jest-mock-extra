@@ -8,6 +8,10 @@ jobs:
       - uses: actions/setup-node@v4
       - name: Install
         run: npm ci
+      - name: Check formatting
+        run: npm run prettier:check
+      - name: Lint
+        run: npm run lint:check
       - name: Test and Coverage
         run: npm run coverage
       - name: Update Coverage Badge
