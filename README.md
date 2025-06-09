@@ -2,11 +2,12 @@
 
 > Type safe mocking extensions for Jest 🃏
 
-[![Build Status](https://travis-ci.com/marchaos/jest-mock-extended.svg?branch=master)](https://travis-ci.com/marchaos/jest-mock-extended)
 [![cov](https://kraus-milan.github.io/jest-mock-extra/badges/coverage.svg)](https://github.com/kraus-milan/jest-mock-extra/actions)
-[![npm version](https://badge.fury.io/js/jest-mock-extended.svg)](https://badge.fury.io/js/jest-mock-extended)
+[![npm version](https://badge.fury.io/js/jest-mock-extra.svg)](https://badge.fury.io/js/jest-mock-extra)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm downloads](https://badgen.net/npm/dw/jest-mock-extended)](https://badge.fury.io/js/jest-mock-extended)
+[![npm downloads](https://badgen.net/npm/dw/jest-mock-extra)](https://badge.fury.io/js/jest-mock-extra)
+
+This library is based on [jest-mock-extended](https://github.com/marchaos/jest-mock-extended) from Marc McIntyre. Thank you for your great work!
 
 ## Features
 
