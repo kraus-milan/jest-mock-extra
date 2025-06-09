@@ -478,7 +478,7 @@ describe('Matchers', () => {
     });
 
     describe('captor', () => {
-        let fn: () => void;
+        let fn: (...args: Array<unknown>) => void;
         let doSomething: (...args: any[]) => void;
 
         beforeEach(() => {

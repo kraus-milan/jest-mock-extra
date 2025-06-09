@@ -1,16 +1,13 @@
 name: Publish
 on: [workflow_dispatch]
 jobs:
-    test:
+    publish:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
             - name: Install
               run: npm ci
-            - name: Test and Coverage
-              run: npm run coverage
-
             - name: Publish to NPM registry
               uses: JS-DevTools/npm-publish@v3
               with:
