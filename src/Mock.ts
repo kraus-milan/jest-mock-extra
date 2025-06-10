@@ -1,4 +1,5 @@
-import { fn as jestFn, FunctionLike, Mock } from 'jest-mock';
+import { jest } from '@jest/globals';
+import { FunctionLike, Mock } from 'jest-mock';
 import { DeepPartial } from 'ts-essentials';
 
 import calledWithFn from './CalledWithFn';
@@ -195,7 +196,7 @@ export const stub = <T extends object>(): T => {
         // @ts-expect-error
         return obj[property];
       }
-      return jestFn();
+      return jest.fn();
     },
   });
 };

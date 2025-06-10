@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { describe, expect, jest, test } from '@jest/globals';
+import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { fail } from 'assert';
 
 import calledWithFn from './CalledWithFn';
@@ -623,6 +623,30 @@ describe('jest-mock-extended', () => {
       expect(mockObj.getSomethingWithArgs.mock.calls.length).toBe(1);
       mockClear(mockObj);
       expect(mockObj.getSomethingWithArgs.mock.calls.length).toBe(0);
+    });
+
+    describe('resetting between tests', () => {
+      const mockObj = mock<MockInt>();
+
+      beforeEach(() => {
+        jest.resetAllMocks();
+      });
+
+      test('uses mock once', () => {
+        expect(mockObj.getSomethingWithArgs).not.toHaveBeenCalled();
+
+        mockObj.getSomethingWithArgs.calledWith(1, 2).mockReturnValue(1);
+
+        expect(mockObj.getSomethingWithArgs(1, 2)).toBe(1);
+      });
+
+      test('uses mock twice', () => {
+        expect(mockObj.getSomethingWithArgs).not.toHaveBeenCalled();
+
+        mockObj.getSomethingWithArgs.calledWith(1, 2).mockReturnValue(2);
+
+        expect(mockObj.getSomethingWithArgs(1, 2)).toBe(2);
+      });
     });
   });
 
